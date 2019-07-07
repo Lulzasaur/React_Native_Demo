@@ -1,7 +1,7 @@
 import React from 'react';
 import JobForm from './JobForm';
 import JobList from './JobList';
-import { View, Text } from 'react-native';
+import { View, Text, ScrollView } from 'react-native';
 import { Overlay } from 'react-native-elements';
 
 const APIbaseURL =  `http://api.dataatwork.org/v1`
@@ -42,14 +42,17 @@ class GetJobSkillScreen extends React.Component {
       
       //get skills associated with normalized job title
       let skillsResponse = await fetch(`${APIbaseURL}/jobs/${jobId}/related_skills`),
-          skillsResponseJSON = await skillsResponse.json()
+          skillsResponseJSON = await skillsResponse.json(),
+          skills = []
 
-      let skills =[]
-      
-      for(let [index,skill] of skillsResponseJSON.skills.entries()){
-        skill.skill_name?skills.push(<Text key={index}>{skill.skill_name}</Text>):<Text>No associated Skills</Text>
+      if(!skillsResponseJSON.error){
+        for(let [index,skill] of skillsResponseJSON.skills.entries()){
+          skills.push(<Text key={index}>{skill.skill_name}</Text>)
+        }
+      } else{
+        skills.push(<Text>No associated skills found for this position</Text>)        
       }
-      
+
       await this.setState({selectedJobSkills:skills})
     }
 
@@ -87,7 +90,10 @@ class GetJobSkillScreen extends React.Component {
             isVisible={this.state.isOverlayVisible}
             onBackdropPress={() => this.setState({ isOverlayVisible: false })}
           >
-          {this.state.selectedJobSkills}
+            <Text h2>Skills Needed:</Text>
+            <ScrollView>
+              {this.state.selectedJobSkills}
+            </ScrollView>
           </Overlay>
         </View>
       );

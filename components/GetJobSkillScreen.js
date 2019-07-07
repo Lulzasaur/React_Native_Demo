@@ -24,22 +24,7 @@ class GetJobSkillScreen extends React.Component {
     async componentDidUpdate(prevProps,prevState,snapshot){
       
     if(prevState.search !== this.state.search){
-      //normalize job title first
-      // let normalizedTitleResponse = await fetch(`${APIbaseURL}/jobs/autocomplete?begins_with=${this.state.search}`),
-      //     normalizedTitleResponseJSON = await normalizedTitleResponse.json(), 
-      //     jobId = normalizedTitleResponseJSON[0].uuid,//normalized job uuid
-      //     jobName = normalizedTitleResponseJSON[0].normalized_job_title //taking suggested normalized job name for search
-
-      //     console.log(jobId)
-      //     console.log(jobName)
-      //get skills associated with normalized job title
-      // let skillsResponse = await fetch(`${APIbaseURL}/jobs/${jobId}/related_skills`),
-      //     skillsResponseJSON = await skillsResponse.json()
-
-      // for(let skill of skillsResponseJSON.skills){
-      //   console.log(skill.skill_name)
-      // }
-
+      
       //get jobs associated with normalized job title
         let jobListingResponse = await fetch(`${GITbaseURL}?description=${this.state.search}`)
             jobListingResponseJSON = await jobListingResponse.json()

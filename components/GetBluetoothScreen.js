@@ -1,5 +1,5 @@
 import React from 'react';
-import JobForm from './JobForm';
+import BluetoothForm from './BluetoothForm';
 import { Button, View, Text } from 'react-native';
 
 class GetBluetoothScreen extends React.Component {
@@ -10,7 +10,7 @@ class GetBluetoothScreen extends React.Component {
     render() {
       return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-          <Text>BLUETOOTH STUFF HERE</Text>
+          <BluetoothForm></BluetoothForm>
         </View>
       );
     }

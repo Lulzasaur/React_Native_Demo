@@ -2,7 +2,7 @@ import React from 'react';
 import JobForm from './JobForm';
 import JobList from './JobList';
 import { View, Text } from 'react-native';
-import {Overlay} from 'react-native-elements';
+import { Overlay } from 'react-native-elements';
 
 const APIbaseURL =  `http://api.dataatwork.org/v1`
 const GITbaseURL = `https://jobs.github.com/positions.json`
@@ -10,28 +10,32 @@ const GITbaseURL = `https://jobs.github.com/positions.json`
 class GetJobSkillScreen extends React.Component {
     constructor(props){
         super(props)
+
         this.state = {
           jobSearchTerm:'',
           jobListings:[],
           isOverlayVisible:false,
           selectedJobSkills:[]
         }
+
         this.handleSkillSearch = this.handleSkillSearch.bind(this)
+
         this.toggleOverlay = this.toggleOverlay.bind(this)
+
         this.findMatchingSkills = this.findMatchingSkills.bind(this)
     }
 
-    handleSkillSearch(title){
-      this.setState({jobSearchTerm:title})      
+    handleSkillSearch(searchTerm){
+      this.setState({jobSearchTerm:searchTerm})      
     }
 
     toggleOverlay(visible){
       this.setState({isOverlayVisible:visible})
     }
 
-    async findMatchingSkills(title){
+    async findMatchingSkills(jobTitle){
       // normalize job title first
-      let normalizedTitleResponse = await fetch(`${APIbaseURL}/jobs/normalize?job_title=${title}`),
+      let normalizedTitleResponse = await fetch(`${APIbaseURL}/jobs/normalize?job_title=${jobTitle}`),
           normalizedTitleResponseJSON = await normalizedTitleResponse.json(), 
           jobId = normalizedTitleResponseJSON[0].uuid//normalized job uuid
 
@@ -42,8 +46,8 @@ class GetJobSkillScreen extends React.Component {
 
       let skills =[]
       
-      for(let skill of skillsResponseJSON.skills){
-        skills.push(<Text>{skill.skill_name}</Text>)
+      for(let [index,skill] of skillsResponseJSON.skills.entries()){
+        skill.skill_name?skills.push(<Text key={index}>{skill.skill_name}</Text>):<Text>No associated Skills</Text>
       }
       
       await this.setState({selectedJobSkills:skills})
@@ -59,11 +63,12 @@ class GetJobSkillScreen extends React.Component {
         
         let listings = []
 
-        for(let job of jobListingResponseJSON){
+        for(let [index,job] of jobListingResponseJSON.entries()){
           listings.push({
             title:job.title,
             subtitle:job.type,
-            logo:job.company_logo          
+            logo:job.company_logo,
+            id:index         
           })
         }
         

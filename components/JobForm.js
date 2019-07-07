@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, StyleSheet, Button } from 'react-native';
-
 import t from 'tcomb-form-native'; // 0.6.9
 
 const Form = t.form.Form;
@@ -13,7 +12,7 @@ class JobForm extends React.Component {
 
   handleSubmit = () =>{
     const value = this._form.getValue(); // use that ref to get the form value
-    
+
     if(value){
       this.props.handleSkillSearch(value.enterJobTitle)
     }

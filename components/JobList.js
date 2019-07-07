@@ -6,6 +6,7 @@ class JobList extends React.Component {
     
     renderItem = ({ item }) => (
         <ListItem
+        key={item.id}
         title={item.title}
         subtitle={item.subtitle}
         leftAvatar={{source:{uri:item.logo}}}

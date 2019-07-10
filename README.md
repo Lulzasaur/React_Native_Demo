@@ -1,4 +1,4 @@
-<img src="assets/ReactNativeDemo.PNG" title="React Native Demo" alt="React Native Demo">
+<img src="assets/ReactNativeDemo.png" title="React Native Demo" alt="React Native Demo">
 
 # React Native Demo
 

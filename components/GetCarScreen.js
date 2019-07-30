@@ -24,82 +24,50 @@ class GetCarScreen extends React.Component {
     }
 
     async onChange(value,type) {
-
       await this.setState({ [type]: value });
+    }
 
+    async getAPIandSetState(route,stateItem){
+      let responseXML = await fetch(route),
+          responseText = await responseXML.text(),
+          responseArr = []
+
+      await parseString(responseText,function(err,result){
+        result.menuItems.menuItem.map(item=>responseArr.push({key:item.value[0],label:item.text[0]}))
+      })
+      
+      this.setState({[stateItem]:[...responseArr]})
     }
 
     async componentDidMount(){
-
-      let yearListXML = await fetch(`${APIbaseURL}/vehicle/menu/year`),
-          yearListText = await yearListXML.text(),
-          yearArr = []
-
-          await parseString(yearListText,function(err,result){
-            result.menuItems.menuItem.map(year=>yearArr.push({key:year.value[0],label:year.value[0]}))
-          })
-          
-          this.setState({years:[...yearArr]})
+      this.getAPIandSetState(`${APIbaseURL}/vehicle/menu/year`,'years')
     }
 
     async componentDidUpdate(prevProps,prevState,snapshot){
-      //handle for Make
       if(prevState.pickedYear !== this.state.pickedYear){
+        this.getAPIandSetState(`${APIbaseURL}/vehicle/menu/make?year=${this.state.pickedYear}`,'make')
+      }
 
-        let makeListXML = await fetch(`${APIbaseURL}/vehicle/menu/make?year=${this.state.pickedYear}`)
-            makeListText = await makeListXML.text(),
-            makeArr = []
-        
-            await parseString(makeListText,function(err,result){
-              result.menuItems.menuItem.map(make=>makeArr.push({key:make.value[0],label:make.text[0]}))
-            })    
-        
-            this.setState({make:[...makeArr]})
-        }
-
-      //handle for Model
       if(prevState.pickedMake !== this.state.pickedMake){
+        this.getAPIandSetState(`${APIbaseURL}/vehicle/menu/model?year=${this.state.pickedYear}&make=${this.state.pickedMake}`,'model') 
+      }
 
-        let modelListXML = await fetch(`${APIbaseURL}/vehicle/menu/model?year=${this.state.pickedYear}&make=${this.state.pickedMake}`)
-            modelListText = await modelListXML.text(),
-            modelArr = []
+      if(prevState.pickedModel !== this.state.pickedModel){
+        this.getAPIandSetState(`${APIbaseURL}/vehicle/menu/options?year=${this.state.pickedYear}&make=${this.state.pickedMake}&model=${this.state.pickedModel}`,'pickedCarId') 
+      }
+
+      if(prevState.pickedCarId !== this.state.pickedCarId){
+
+        let carInfoXML = await fetch(`${APIbaseURL}/vehicle/${this.state.pickedCarId[0].key}`)
+            carInfoText = await carInfoXML.text(),
+            evMotor = ''
         
-            await parseString(modelListText,function(err,result){
-              result.menuItems.menuItem.map(model=>modelArr.push({key:model.value[0],label:model.text[0]}))
+            await parseString(carInfoText,function(err,result){
+              evMotor = result.vehicle.evMotor
             })    
-        
-            this.setState({model:[...modelArr]})
-        }
 
-        //pick Car
-        if(prevState.pickedModel !== this.state.pickedModel){
-
-          let pickedCarXML = await fetch(`${APIbaseURL}/vehicle/menu/options?year=${this.state.pickedYear}&make=${this.state.pickedMake}&model=${this.state.pickedModel}`)
-              pickedCarText = await pickedCarXML.text(),
-              pickedCarID = ''
-          
-              await parseString(pickedCarText,function(err,result){
-                pickedCarId = result.menuItems.menuItem[0].value[0]
-              })    
-
-              this.setState({pickedCarId})
-        }
-
-        //get individual car info
-        if(prevState.pickedCarId !== this.state.pickedCarId){
-        
-          let carInfoXML = await fetch(`${APIbaseURL}/vehicle/${this.state.pickedCarId}`)
-              carInfoText = await carInfoXML.text(),
-              evMotor = ''
-          
-              await parseString(carInfoText,function(err,result){
-                evMotor = result.vehicle.evMotor
-              })    
-
-              this.setState({evMotor})
-        }
-
-
+            this.setState({evMotor})
+      }
     }
 
     render() {

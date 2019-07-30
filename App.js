@@ -1,7 +1,6 @@
 import React from 'react';
 import HomeScreen from './components/HomeScreen'
-import GetJobSkillScreen from './components/GetJobSkillScreen'
-import GetBluetoothScreen from './components/GetBluetoothScreen'
+import GetCarScreen from './components/GetCarScreen'
 import {View} from 'react-native';  
 import { createAppContainer } from 'react-navigation'; // Version can be specified in package.json
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
@@ -19,24 +18,13 @@ const RouteConfigs = {
           )
       }
     },
-    JobSkills: {
-      screen:GetJobSkillScreen,
+    Cars: {
+      screen:GetCarScreen,
       navigationOptions:{
-        tabBarLabel:'Job Skills',
+        tabBarLabel:'Car Details',
           tabBarIcon:({tintColor})=>(
             <View>
-              <Icon style ={[{color:tintColor}]} size={25} name={'ios-body'} />
-            </View>
-          )
-      }
-    },
-    Bluetooth:{
-      screen:GetBluetoothScreen,
-      navigationOptions:{
-        tabBarLabel:'Bluetooth Devices',
-          tabBarIcon:({tintColor})=>(
-            <View>
-              <Icon style ={[{color:tintColor}]} size={25} name={'ios-bluetooth'} />
+              <Icon style ={[{color:tintColor}]} size={25} name={'ios-car'} />
             </View>
           )
       }
